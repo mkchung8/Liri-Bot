@@ -11,3 +11,6 @@ require("dotenv").config();
 
    * `do-what-it-says` 
 */
+
+var command = process.argv[2];
+var request = process.argv[3];
