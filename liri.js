@@ -6,7 +6,7 @@ var axios = require("axios");
 const fs = require("fs");
 
 var spotify = new Spotify(keys.spotify);
-var omdbKey = keys.omdb.apiKey
+var omdbKey = keys.omdb.apiKey;
 
 var command = process.argv[2];
 var query = process.argv.slice(3).join(" ");
@@ -31,6 +31,10 @@ function liriFunction() {
       doThis();
       break;
 
+    default:
+      console.log("Sorry, I do not recognize that command. Try again.")
+      break;
+
   };
 }
 
@@ -38,7 +42,7 @@ liriFunction();
 
 function concertThis() {
 
-  if (query === ""){
+  if (query === "") {
     query = "Bassnectar"
   }
 
@@ -49,16 +53,26 @@ function concertThis() {
     .get(queryUrl)
     .then(function (response) {
 
-      console.log("Number of Events: " + response.data.length)
+      console.log(`Number of Events for ${query}: ${response.data.length}`)
       console.log("+++++++++++++++++++++++++++++++++++++++++++++++++")
 
       for (var i = 0; i < response.data.length; i++) {
         let time = response.data[i].datetime;
         time = moment(time).format("MM/DD/YYYY");
-        console.log("Event Date: " + time);
-        console.log("Venue Name: " + response.data[i].venue.name);
-        console.log(`Venue Location: ${response.data[i].venue.city}, ${response.data[i].venue.region}`);
-        console.log("================================================")
+        let data = `
+        Event Date: ${time}
+        Venue Name: ${response.data[i].venue.name}
+        Venue Location: ${response.data[i].venue.city}, ${response.data[i].venue.region}
+        =======================================
+         `
+
+        console.log(data);
+
+        fs.appendFile("log.txt", query + "\n=================\n" + data + "\n=================\n", function (error) {
+          if (error) {
+            console.error(error);
+          }
+        });
       }
     })
     .catch(function (error) {
@@ -86,15 +100,9 @@ function concertThis() {
 
 function spotifyThisSong() {
 
-  /*
-    var searchQuery = query.split(" ");
-    var spotifyQuery = searchQuery.slice(0).join("%20");
-    console.log(spotifyQuery);
-  */
-
- if (query === ""){
-  query = "Me No Care"
-}
+  if (query === "") {
+    query = "Me No Care"
+  }
 
   spotify.search({
     type: 'track',
@@ -109,12 +117,21 @@ function spotifyThisSong() {
       let previewLink = data[0].preview_url;
       let trackArtists = data[0].album.artists[0].name;
       let trackAlbum = data[0].album.name
-      console.log(`
-        Track Name: ${trackName}
-        Artist(s): ${trackArtists}
-        Album: ${trackAlbum}
-        Preview Link: ${previewLink}
-        `);
+      
+      let txt = `
+                 Track Name: ${trackName}
+                 Artist: ${trackArtists}
+                 Album: ${trackAlbum}
+                 Preview Link: ${previewLink}
+                 `
+
+      console.log(txt);
+
+      fs.appendFile("log.txt", query + "\n=================\n" + txt + "\n=================\n", function (error) {
+        if (error) {
+          console.error(error);
+        }
+      });
 
     })
     .catch(function (err) {
@@ -126,19 +143,19 @@ function spotifyThisSong() {
 }
 
 function movieThis() {
-  
 
-  if (query === ""){
+
+  if (query === "") {
     query = "Interstellar"
   }
 
   var queryUrl = 'http://www.omdbapi.com/?t=' + query + '&apikey=' + omdbKey + '&plot=short&tomatoes=true';
-  
 
-  
+
+
   axios.get(queryUrl).then(
     function (response) {
-      console.log(`
+      var data = `
       Movie Title: ${response.data.Title}
       Year: ${response.data.Year}
       IMDB Rating: ${response.data.imdbRating}
@@ -146,7 +163,16 @@ function movieThis() {
       Country: ${response.data.Country}
       Language: ${response.data.Language}
       Actors: ${response.data.Actors}
-      Plot Summary: ${response.data.Plot} `);
+      Plot Summary: ${response.data.Plot} `
+
+      console.log(data);
+
+
+      fs.appendFile("log.txt", query + "\n=================\n" + data + "\n=================\n", function (error) {
+        if (error) {
+          console.error(error);
+        }
+      });
 
 
     }
@@ -155,24 +181,19 @@ function movieThis() {
       console.error(err);
     }
   });
-  
- 
-  fs.appendFile("log.txt", query + "\n=================\n", function (error){
-    if (error) {
-      console.error(error);
-    }
-  });
 
-  
+
+
+
 }
 
 function doThis() {
-  
+
   fs.readFile("random.txt", "utf-8", function (error, data) {
     if (error) {
       console.error(error);
     }
-    
+
     let randomTextArr = data.split(",");
     command = randomTextArr[0];
     query = randomTextArr[1];
