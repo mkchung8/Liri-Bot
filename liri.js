@@ -8,8 +8,8 @@ const fs = require("fs");
 var spotify = new Spotify(keys.spotify);
 var omdbKey = keys.omdb.apiKey
 
-const command = process.argv[2];
-const query = process.argv.slice(3).join(" ");
+var command = process.argv[2];
+var query = process.argv.slice(3).join(" ");
 
 
 function liriFunction() {
@@ -37,8 +37,9 @@ function liriFunction() {
 liriFunction();
 
 function concertThis() {
-  
+
   var queryUrl = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp"
+
 
   axios
     .get(queryUrl)
@@ -81,33 +82,50 @@ function concertThis() {
 
 function spotifyThisSong() {
 
-  
-/*
-  var searchQuery = query.split(" ");
-  var spotifyQuery = searchQuery.slice(0).join("%20");
-  console.log(spotifyQuery);
-*/
+
+  /*
+    var searchQuery = query.split(" ");
+    var spotifyQuery = searchQuery.slice(0).join("%20");
+    console.log(spotifyQuery);
+  */
   spotify.search({
     type: 'track',
     query: query,
-    limit: 5,
+    limit: 1,
   })
-  .then(function(response){
-    console.log(response.tracks.items)
-    
-  })
-  .catch(function(err){
-    if (err) {
-      console.error(err);
-    }
-  })
+    .then(function (response) {
+      let data = response.tracks.items;
+
+
+      let trackName = data[0].name;
+      let previewLink = data[0].preview_url;
+      let trackArtists = data[0].album.artists[0].name;
+      let trackAlbum = data[0].album.name
+      console.log(`
+        Track Name: ${trackName}
+        Artist(s): ${trackArtists}
+        Album: ${trackAlbum}
+        Preview Link: ${previewLink}
+        `);
+
+    })
+    .catch(function (err) {
+      if (err) {
+        console.error(err);
+      }
+    })
 
 }
 
 function movieThis() {
-  
+
   var queryUrl = 'http://www.omdbapi.com/?t=' + query + '&apikey=' + omdbKey + '&plot=short&tomatoes=true';
-  console.log(queryUrl);
+  
+
+  if (query === " ") {
+    query = "Mr Nobody";
+  }
+
 
   axios.get(queryUrl).then(
     function (response) {
@@ -131,13 +149,16 @@ function movieThis() {
 }
 
 function doThis() {
-  console.log("Do This Function")
-  fs.readFile("random.txt", "utf-8", function(error, data){
+  
+  fs.readFile("random.txt", "utf-8", function (error, data) {
     if (error) {
       console.error(error);
     }
-    let random = data.split(",");
-    console.log(random)
+    
+    let randomTextArr = data.split(",");
+    command = randomTextArr[0];
+    query = randomTextArr[1];
+    liriFunction();
 
   })
 }
