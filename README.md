@@ -15,9 +15,9 @@ The parameters Liri-Bot takes are:
 
 ## Getting Started 
 
-## To start using Liri, navigate to the root of your folder from terminal and enter the command 'npm i' to download dependencies. 
-## You can access screen shots from images folder to better view the functions of each Liri command.
+### To start using Liri, navigate to the root of your folder from terminal and enter the command 'npm i' to download dependencies. 
+### You can access screen shots from images folder to better view the functions of each Liri command.
 
-<img src = "./images/npmi.png">
+<img src = "./images/npmi.jpg">
 
 
