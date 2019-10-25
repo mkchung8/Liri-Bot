@@ -87,7 +87,7 @@ function spotifyThisSong() {
     var spotifyQuery = searchQuery.slice(0).join("%20");
     console.log(spotifyQuery);
   */
- 
+
   spotify.search({
     type: 'track',
     query: query,
@@ -162,3 +162,4 @@ function doThis() {
 
   })
 }
+
