@@ -38,6 +38,10 @@ liriFunction();
 
 function concertThis() {
 
+  if (query === ""){
+    query = "Bassnectar"
+  }
+
   var queryUrl = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp"
 
 
@@ -88,6 +92,10 @@ function spotifyThisSong() {
     console.log(spotifyQuery);
   */
 
+ if (query === ""){
+  query = "Me No Care"
+}
+
   spotify.search({
     type: 'track',
     query: query,
@@ -118,15 +126,16 @@ function spotifyThisSong() {
 }
 
 function movieThis() {
+  
+
+  if (query === ""){
+    query = "Interstellar"
+  }
 
   var queryUrl = 'http://www.omdbapi.com/?t=' + query + '&apikey=' + omdbKey + '&plot=short&tomatoes=true';
   
 
-  if (query === " ") {
-    query = "Mr Nobody";
-  }
-
-
+  
   axios.get(queryUrl).then(
     function (response) {
       console.log(`
@@ -146,6 +155,15 @@ function movieThis() {
       console.error(err);
     }
   });
+  
+ 
+  fs.appendFile("log.txt", query + "\n=================\n", function (error){
+    if (error) {
+      console.error(error);
+    }
+  });
+
+  
 }
 
 function doThis() {
