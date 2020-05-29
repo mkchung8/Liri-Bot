@@ -72,8 +72,11 @@ If no search query is supplied, Liri will run the function based on default sett
 #### Log 
 Commands and retrieved information are written into the log.txt file.
 
-### Author 
-Code Created & Maintained by: Miyoung Chung 
+### Code Created & Maintained By: 
+Miyoung Chung 
+mkchung.8@gmail.com
+https://www.linkedin.com/in/mkchung8/
+www.miyoungchung.com
 
 
 
